@@ -1,0 +1,22 @@
+# Arivora Backend - Python Dependencies
+
+# Django Web Framework
+django>=6.0.2
+
+# Django CORS Headers (Cross-Origin Resource Sharing)
+django-cors-headers>=4.6.0
+
+# MongoDB Driver (PyMongo with Atlas SRV support)
+pymongo[srv]>=4.10.0
+
+# TLS CA certificates bundle (required for MongoDB Atlas fallback)
+certifi>=2024.1.1
+
+# HTTP Requests Library (Gemini API + WhatsApp OTP)
+requests>=2.32.0
+
+# Production WSGI server (required for Railway deployment)
+gunicorn>=22.0.0
+
+# WhiteNoise for serving static files in production
+whitenoise>=6.7.0
