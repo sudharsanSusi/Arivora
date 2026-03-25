@@ -160,7 +160,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000').split(',')
 
 # Gemini API Configuration
-GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyCs9AOVmF2wr4UMCfder-zXjmkNWb6bpJM')
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 
 # Railway PORT
 PORT = os.environ.get('PORT', '8000')

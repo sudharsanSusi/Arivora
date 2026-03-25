@@ -169,9 +169,17 @@ Safety & Language Rules:
             "error": "Request timed out. Please try again."
         }
     except requests.exceptions.RequestException as e:
+        error_details = str(e)
+        if e.response is not None:
+            try:
+                error_body = e.response.json()
+                error_details = f"{e.response.status_code}: {error_body.get('error', {}).get('message', str(error_body))}"
+            except Exception:
+                error_details = f"{e.response.status_code}: {e.response.text}"
+                
         return {
             "success": False,
-            "error": f"API request failed: {str(e)}"
+            "error": f"API request failed: {error_details}"
         }
     except Exception as e:
         return {
