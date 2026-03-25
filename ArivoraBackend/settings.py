@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-1otk%!bhi!y6$q7^d+=c859wwn(id%=@&4i9hzq3^d5du(i)wy'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-1otk%!bhi!y6$q7^d+=c859wwn(id%=@&4i9hzq3^d5du(i)wy')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 
 # Application definition
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -118,6 +120,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
@@ -137,8 +141,8 @@ CACHES = {
 
 
 # UltraMsg WhatsApp API Configuration
-ULTRAMSG_INSTANCE_ID = 'instance161285'
-ULTRAMSG_TOKEN = 'cbbfh96aw3bb3l7v'
+ULTRAMSG_INSTANCE_ID = os.environ.get('ULTRAMSG_INSTANCE_ID', 'instance161285')
+ULTRAMSG_TOKEN = os.environ.get('ULTRAMSG_TOKEN', 'cbbfh96aw3bb3l7v')
 
 
 # CORS Configuration
@@ -149,8 +153,14 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
 ]
 
-# Allow all origins during development (use with caution)
+# Allow all origins (mobile app needs this)
 CORS_ALLOW_ALL_ORIGINS = True
 
+# CSRF Trusted Origins (required for Railway)
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000').split(',')
+
 # Gemini API Configuration
-GEMINI_API_KEY = 'AIzaSyCs9AOVmF2wr4UMCfder-zXjmkNWb6bpJM'
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyCs9AOVmF2wr4UMCfder-zXjmkNWb6bpJM')
+
+# Railway PORT
+PORT = os.environ.get('PORT', '8000')
