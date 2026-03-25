@@ -37,11 +37,9 @@ def get_gemini_response(message, conversation_history=None, language_code=None):
                 "parts": [{"text": msg.get("text", "")}]
             })
     
-    # Add the current message
-    if language_code:
-        lang_map = {'ta-IN': 'Tamil', 'hi-IN': 'Hindi', 'en-US': 'English'}
-        req_lang = lang_map.get(language_code, 'English')
-        message = f"(IMPORTANT: Please respond to the following query exclusively in the {req_lang} language) {message}"
+    # We no longer aggressively prefix the message with a language enforcement based on frontend character detection.
+    # The frontend detection restricts users from typing "in Tamil" using English characters.
+    # Gemini will automatically detect and respect the language requested by the user.
 
     contents.append({
         "role": "user",
@@ -116,8 +114,9 @@ A: I only provide legal information and guidance based strictly on Indian Law. I
 
 Safety & Language Rules:
 - Language Support: You ONLY support Tamil, English, and Hindi. No other languages are supported.
-- Language Matching: If the user writes in Tamil, you MUST reply entirely in Tamil. If the user writes in Hindi, you MUST reply entirely in Hindi. If the user writes in English, you MUST reply entirely in English.
-- Unsupported Languages: If the user queries in any language OTHER than Tamil, English, or Hindi (e.g., Telugu, Malayalam, Spanish, French, etc.), you MUST politely refuse to answer the query, and state that you only support Tamil, English, and Hindi.
+- Dynamic Language Selection: You must reply in the language the user explicitly asks for (e.g., if they ask to reply "in Tamil" or "in Hindi", you must do so).
+- Default Language Matching: If they do not explicitly ask for a specific language, reply in the same language they used in their prompt.
+- Unsupported Languages: If the user queries in or asks for any language OTHER than Tamil, English, or Hindi (e.g., Telugu, Malayalam, Spanish, French, etc.), you MUST politely refuse to answer the query, and state that you only support Tamil, English, and Hindi.
 - Never break character.
 - Never answer outside the legal domain.
 - If the user insists on non-legal topics, repeat refusal politely.
